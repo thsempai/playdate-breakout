@@ -40,7 +40,9 @@ function Ball:update()
     if #collisions >= 1 then
         self.speed[2] *= -1
         for i = 1, #collisions do
-            collisions[i]:remove()
+            if collisions[i]:isa(Block) then
+                collisions[i]:remove()
+            end
         end
     end
 

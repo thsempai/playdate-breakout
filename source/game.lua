@@ -3,8 +3,8 @@ import "CoreLibs/sprites"
 local gfx <const> = playdate.graphics
 local pd <const> = playdate
 
-local gameAreaWidth <const> = 224
-local gameAreaHeigh <const> = 240
+gameAreaWidth = 224
+gameAreaHeigh = 240
 local gameAreaPositionX <const> = (pd.display.getWidth() - gameAreaWidth) / 2
 local gameAreaPositionY <const> = 0
 
@@ -65,7 +65,7 @@ end
 class("Block").extends(gfx.sprite)
 
 function Block:init(x, y)
-
+    Block.super.init(self)
     local image = gfx.image.new("sprites/block")
     self:setImage(image)
     self:moveTo(x + image.width / 2, y + image.height / 2)
