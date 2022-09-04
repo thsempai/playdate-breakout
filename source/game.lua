@@ -69,5 +69,6 @@ function Block:init(x, y)
     local image = gfx.image.new("sprites/block")
     self:setImage(image)
     self:moveTo(x + image.width / 2, y + image.height / 2)
+    self:setCollideRect(0, 0, image:getSize())
 
 end
