@@ -15,6 +15,8 @@ local function initialize()
 	ball:add()
 	local game = Game()
 	game:add()
+
+	game:addBlocks(4, 7)
 end
 
 initialize()
