@@ -8,6 +8,8 @@ gameAreaHeigh = 240
 local gameAreaPositionX <const> = (pd.display.getWidth() - gameAreaWidth) / 2
 local gameAreaPositionY <const> = 0
 
+score = 0
+
 function getRightBorder()
     return gameAreaPositionX + gameAreaWidth
 end
@@ -29,19 +31,27 @@ class("Game").extends(gfx.sprite)
 function Game:init(line, col)
 
     Game.super.init(self)
-    self:moveTo(gameAreaPositionX + gameAreaWidth / 2, gameAreaPositionY + gameAreaHeigh / 2)
+    self:moveTo(pd.display.getWidth() / 2, pd.display.getHeight() / 2)
 
 
-    local image = gfx.image.new(gameAreaWidth, gameAreaHeigh)
+    local image = gfx.image.new(pd.display.getWidth(), pd.display.getHeight())
 
     gfx.pushContext(image)
-    gfx.drawRect(0, 0, gameAreaWidth, gameAreaHeigh)
+    gfx.setColor(gfx.kColorWhite)
+    gfx.fillRoundRect(getLeftBorder(), getTopBorder(), gameAreaWidth, gameAreaHeigh, 3)
+
+    gfx.fillRoundRect(getRightBorder() + 10, getTopBorder(), pd.display.getWidth() - getRightBorder() - 20, 100, 3)
     gfx.popContext()
 
     self:setImage(image)
+    self:setZIndex(-32768)
 
     self.blocks = {}
 
+end
+
+function Game:update()
+    Game.super.update(self)
 end
 
 function Game:addBlocks(line, col)
@@ -70,5 +80,6 @@ function Block:init(x, y)
     self:setImage(image)
     self:moveTo(x + image.width / 2, y + image.height / 2)
     self:setCollideRect(0, 0, image:getSize())
+    self.value = 100
 
 end

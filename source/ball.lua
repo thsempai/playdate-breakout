@@ -15,6 +15,9 @@ function Ball:init(x, y, r, speed)
     local image = gfx.image.new(r * 2, r * 2)
 
     gfx.pushContext(image)
+    gfx.setColor(gfx.kColorWhite)
+    gfx.fillCircleAtPoint(r, r, r)
+    gfx.setColor(gfx.kColorBlack)
     gfx.drawCircleAtPoint(r, r, r)
     gfx.popContext()
 
@@ -41,6 +44,7 @@ function Ball:update()
         self.speed[2] *= -1
         for i = 1, #collisions do
             if collisions[i]:isa(Block) then
+                score += collisions[i].value
                 collisions[i]:remove()
             end
         end
