@@ -12,8 +12,6 @@ local pd <const> = playdate
 pd.graphics.setBackgroundColor(gfx.kColorBlack)
 local function initialize()
 
-	local ball = Ball(200, 120, 8, { 4, 4 })
-	ball:add()
 	local game = Game()
 	game:add()
 	game:addBlocks(4, 7)
@@ -27,4 +25,5 @@ initialize()
 function playdate.update()
 	gfx.sprite.update()
 	gfx.drawText(score, getRightBorder() + 20, getTopBorder() + 10)
+	gfx.drawText("lifes: " .. lifes, getRightBorder() + 20, getTopBorder() + 30)
 end

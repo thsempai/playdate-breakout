@@ -9,6 +9,7 @@ local gameAreaPositionX <const> = (pd.display.getWidth() - gameAreaWidth) / 2
 local gameAreaPositionY <const> = 0
 
 score = 0
+lifes = 3
 
 function getRightBorder()
     return gameAreaPositionX + gameAreaWidth

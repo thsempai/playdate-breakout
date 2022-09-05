@@ -21,6 +21,8 @@ function Ball:init(x, y, r, speed)
     gfx.drawCircleAtPoint(r, r, r)
     gfx.popContext()
 
+    self.isDocked = true
+
     self:setImage(image)
     self:setCollideRect(0, 0, r * 2, r * 2)
 end
@@ -33,10 +35,15 @@ function Ball:update()
         self.speed[1] *= -1
     end
 
-    if self.y <= getTopBorder() + self.height / 2 or self.y >= getBottomBorder() - self.height / 2 then
+    if self.y <= getTopBorder() + self.height / 2 then
         self.speed[2] *= -1
     end
 
+    if self.y >= getBottomBorder() - self.height / 2 then
+        self.isDocked = true
+        self.speed = { 0, 0 }
+        lifes -= 1
+    end
     -- collisions
     collisions = self:overlappingSprites()
 
