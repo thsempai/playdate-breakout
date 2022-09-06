@@ -1,7 +1,10 @@
 import "CoreLibs/sprites"
 import "game"
+import "bonus"
+import "player"
 
 local gfx <const> = playdate.graphics
+local snd <const> = playdate.sound
 local pd <const> = playdate
 
 class("Ball").extends(gfx.sprite)
@@ -25,6 +28,8 @@ function Ball:init(x, y, r, speed)
 
     self:setImage(image)
     self:setCollideRect(0, 0, r * 2, r * 2)
+    self.soundHitPlayer = snd.sampleplayer.new("sounds/hit-player")
+    self.soundHitBlock = snd.sampleplayer.new("sounds/hit-block")
 end
 
 function Ball:update()
@@ -47,14 +52,22 @@ function Ball:update()
     -- collisions
     collisions = self:overlappingSprites()
 
-    if #collisions >= 1 then
-        self.speed[2] *= -1
-        for i = 1, #collisions do
-            if collisions[i]:isa(Block) then
-                score += collisions[i].value
-                collisions[i]:remove()
-            end
+
+    speedIsChanged = false
+    for i = 1, #collisions do
+        if collisions[i]:isa(Block) then
+            self.soundHitBlock:play()
+            collisions[i]:destroy()
+            speedIsChanged = true
+        end
+        if collisions[i]:isa(Player) then
+            self.soundHitPlayer:play()
+            speedIsChanged = true
         end
     end
+    if speedIsChanged then
+        self.speed[2] *= -1
+    end
+
 
 end

@@ -8,7 +8,7 @@ local pd <const> = playdate
 
 class("Player").extends(gfx.sprite)
 
-function Player:init(x, y, speed)
+function Player:init(x, y, speed, game)
     Player.super.init(self)
 
     local image = gfx.image.new("sprites/player")
@@ -18,6 +18,7 @@ function Player:init(x, y, speed)
     self.speed = speed
     self.crankMultiple = 20
     self.ball = Ball(x, y - self.height / 2 - 10, 8, { 0, 0 })
+    self.game = game
 end
 
 function Player:add()
@@ -62,5 +63,12 @@ function Player:update()
         self.ball:moveTo(self.x, self.y - self.height / 2 - 10)
     end
 
+    -- collisions
 
+    collisions = self:overlappingSprites()
+    for i = 1, #collisions do
+        if collisions[i]:isa(Bonus) then
+            self.game:getNewBonus(collisions[i])
+        end
+    end
 end
