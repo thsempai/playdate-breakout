@@ -5,7 +5,7 @@ local pd <const> = playdate
 
 class("Eye").extends(AnimatedSprite)
 
-function Eye:init(minX, minY, maxX, maxY)
+function Eye:init(minX, maxX, minY, maxY)
 
     self.minX = minX
     self.minY = minY
@@ -20,7 +20,7 @@ function Eye:init(minX, minY, maxX, maxY)
     self:addState("close", 12, 12, { tickStep = 1, nextAnimation = "close" }).asDefault()
     self:addState("blink", 13, 22, { tickStep = 1, nextAnimation = "open" })
 
-    self.states.close.onAnimationEndEvent = function(self) self:randomMove() end
+    self.states.closing.onAnimationEndEvent = function(self) self:randomMove() end
 
     self:randomMove()
     self:playAnimation()
@@ -51,6 +51,7 @@ end
 function Eye:randomMove()
     x = math.random(self.minX, self.maxX)
     y = math.random(self.minY, self.maxY)
+    print(x .. " " .. y)
     self:moveTo(x, y)
 end
 
