@@ -10,7 +10,7 @@ gameAreaHeigh = 240
 local gameAreaPositionX <const> = (pd.display.getWidth() - gameAreaWidth) / 2
 local gameAreaPositionY <const> = 0
 
-local bonusRatio = 0.5
+local bonusRatio = 0.125
 
 score = 0
 lifes = 3

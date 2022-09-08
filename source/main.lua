@@ -5,6 +5,7 @@ import "CoreLibs/timer"
 import "ball"
 import "game"
 import "player"
+import "eye"
 
 local gfx <const> = playdate.graphics
 local pd <const> = playdate
@@ -22,11 +23,17 @@ local function initialize()
 
 	local player = Player(getLeftBorder() + gameAreaWidth / 2, getBottomBorder() - 25, 5, game)
 	player:add()
+
+	local eye1 = Eye(16, getLeftBorder() - 16, 16, getBottomBorder() - 16)
+
+	eye1:add()
+
 end
 
 initialize()
 
 function playdate.update()
 	gfx.sprite.update()
+	pd.timer.updateTimers()
 
 end
