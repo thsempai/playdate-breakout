@@ -1,4 +1,5 @@
 import "CoreLibs/sprites"
+import "CoreLibs/string"
 
 import "bonus"
 
@@ -7,6 +8,8 @@ local pd <const> = playdate
 
 gameAreaWidth = 224
 gameAreaHeigh = 240
+blockSize = 16
+
 local gameAreaPositionX <const> = (pd.display.getWidth() - gameAreaWidth) / 2
 local gameAreaPositionY <const> = 0
 
@@ -34,10 +37,47 @@ end
 
 class("Game").extends(gfx.sprite)
 
-function Game:init(line, col)
+function Game:init(file)
+
 
     Game.super.init(self)
+
+    self.blocks = {}
+
     self:moveTo(pd.display.getWidth() / 2, pd.display.getHeight() / 2)
+
+    if file ~= nil then
+        file = pd.file.open(file)
+
+        dimension = file:readline()
+        index = dimension:find("x")
+        w = tonumber(dimension:sub(1, index - 1))
+        h = tonumber(dimension:sub(index + 1, dimension:len()))
+        gameAreaWidth = w * blockSize
+        gameAreaHeigh = h * blockSize
+
+        lineNumber = 1
+        line = file:readline()
+        while line do
+            line = pd.string.trimWhitespace(line)
+            colNumber = 1
+
+            while line:sub(colNumber, colNumber) ~= "" do
+                if line:sub(colNumber, colNumber) == "." then
+                    colNumber += 1
+                elseif line:sub(colNumber, colNumber + 1) == "bb" then
+                    -- block classic
+                    self:addBlock(lineNumber, colNumber)
+                    colNumber += 2
+                else
+                    error("Level generation: unsupported character found '" .. line:sub(colNumber, colNumber) .. "'.")
+                end
+            end
+
+            line = file:readline()
+            lineNumber += 1
+        end
+    end
 
 
     local image = gfx.image.new(pd.display.getWidth(), pd.display.getHeight())
@@ -54,7 +94,6 @@ function Game:init(line, col)
     self:setImage(image)
     self:setZIndex(-32768)
 
-    self.blocks = {}
     --pd.sound.micinput.startListening()
 
 end
@@ -68,6 +107,16 @@ function Game:update()
             self.currentBonus = nil
         end
     end
+
+end
+
+function Game:addBlock(line, col)
+    x = getLeftBorder() + (col - 1) * blockSize
+    y = getTopBorder() + (line - 1) * blockSize
+
+    block = Block(x, y)
+    block:add()
+    table.insert(self.blocks, block)
 
 end
 
@@ -104,7 +153,8 @@ function Block:init(x, y)
     Block.super.init(self)
     local image = gfx.image.new("sprites/block")
     self:setImage(image)
-    self:moveTo(x + image.width / 2, y + image.height / 2)
+    self:setCenter(0, 0) -- top left
+    self:moveTo(x, y)
     self:setCollideRect(0, 0, image:getSize())
 
 end

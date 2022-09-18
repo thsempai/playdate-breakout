@@ -17,9 +17,8 @@ pd.graphics.setBackgroundColor(gfx.kColorBlack)
 
 local function initialize()
 
-	local game = Game()
+	local game = Game("levels/1.lvl")
 	game:add()
-	game:addBlocks(4, 7)
 
 	local player = Player(getLeftBorder() + gameAreaWidth / 2, getBottomBorder() - 25, 5, game)
 	player:add()
