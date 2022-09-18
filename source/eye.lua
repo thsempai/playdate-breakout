@@ -38,12 +38,10 @@ function Eye:chooseNext()
         nextState = ({ "closing", "blink" })[math.random(1, 2)]
     end
     callback = function()
-        print(state)
         self:changeState(nextState)
         self:chooseNext()
     end
     time = math.random(3, 10) * 1000
-    print(time)
     pd.timer.performAfterDelay(time, callback)
 
 end
@@ -51,7 +49,6 @@ end
 function Eye:randomMove()
     x = math.random(self.minX, self.maxX)
     y = math.random(self.minY, self.maxY)
-    print(x .. " " .. y)
     self:moveTo(x, y)
 end
 
