@@ -19,6 +19,9 @@ function Player:init(x, y, speed, game)
     self.crankMultiple = 20
     self.ball = Ball(x, y - self.height / 2 - 10, 8, { 0, 0 })
     self.game = game
+
+    self:setGroups({ 1 })
+    self:setCollidesWithGroups(2)
 end
 
 function Player:add()
@@ -29,11 +32,6 @@ end
 function Player:dockedBall()
     self.ball.isDocked = true;
     self.ball.speed = { 0, 0 }
-end
-
-function Player:LaunchBall(speed)
-    self.ball.isDocked = false
-    self.ball.speed = speed
 end
 
 function Player:update()
@@ -58,7 +56,7 @@ function Player:update()
 
     if self.ball.isDocked then
         if pd.buttonIsPressed(pd.kButtonA) then
-            self:LaunchBall({ 4, -4 })
+            self.ball:launch({ 4, -4 })
         end
         self.ball:moveTo(self.x, self.y - self.height / 2 - 10)
     end

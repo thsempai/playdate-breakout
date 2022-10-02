@@ -157,6 +157,8 @@ function Block:init(x, y)
     self:moveTo(x, y)
     self:setCollideRect(0, 0, image:getSize())
 
+    self:setGroups(1)
+
 end
 
 function Block:destroy()

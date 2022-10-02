@@ -41,6 +41,7 @@ class("BonusLife").extends(Bonus)
 
 function BonusLife:init(x, y)
     BonusLife.super.init(self, x, y, "sprites/bonus-life")
+    self:setGroups(2)
 end
 
 function BonusLife:use()

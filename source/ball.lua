@@ -14,6 +14,7 @@ function Ball:init(x, y, r, speed)
     Ball.super.init(self)
     self:moveTo(x, y)
     self.speed = speed
+    self._speed = { math.abs(speed[1]), math.abs(speed[2]) }
 
     local image = gfx.image.new(r * 2, r * 2)
 
@@ -30,12 +31,39 @@ function Ball:init(x, y, r, speed)
     self:setCollideRect(0, 0, r * 2, r * 2)
     self.soundHitPlayer = snd.sampleplayer.new("sounds/hit-player")
     self.soundHitBlock = snd.sampleplayer.new("sounds/hit-block")
+    self:setCollidesWithGroups(1)
 end
 
 function Ball:update()
 
     Ball.super.update(self)
-    self:moveBy(self.speed[1], self.speed[2])
+
+    -- collisions
+
+    goalX = self.x + self.speed[1]
+    goalY = self.y + self.speed[2]
+    actualX, actualY, collisions = self:moveWithCollisions(goalX, goalY)
+
+    speedIsChanged = false
+
+    for i = 1, #collisions do
+
+        if goalX ~= actualX or goalY ~= actualY then
+
+            if not collisions[i].other:isa(Player) and actualX - goalX ~= 0 then
+                self.speed[1] *= -1
+            end
+            if actualY - goalY ~= 0 then
+                self.speed[2] *= -1
+            end
+        end
+
+        print(self.speed[1] .. ", " .. self.speed[2])
+
+    end
+
+    -- borders collisions
+
     if self.x <= getLeftBorder() + self.width / 2 or self.x >= getRightBorder() - self.width / 2 then
         self.speed[1] *= -1
     end
@@ -49,25 +77,24 @@ function Ball:update()
         self.speed = { 0, 0 }
         lifes -= 1
     end
-    -- collisions
-    collisions = self:overlappingSprites()
 
+end
 
-    speedIsChanged = false
-    for i = 1, #collisions do
-        if collisions[i]:isa(Block) then
-            self.soundHitBlock:play()
-            collisions[i]:destroy()
-            speedIsChanged = true
-        end
-        if collisions[i]:isa(Player) then
-            self.soundHitPlayer:play()
-            speedIsChanged = true
-        end
+function Ball:launch(speed)
+    self.isDocked = false
+    self.speed = speed
+    self._speed = { math.abs(speed[1]), math.abs(speed[2]) }
+
+end
+
+function Ball:collisionResponse(other)
+    self.soundHitPlayer:play()
+    if other:isa(Block) then
+        other:destroy()
+        return gfx.sprite.kCollisionTypeBounce
+
+    elseif other.isa(Player) then
+        return gfx.sprite.kCollisionTypeBounce
+
     end
-    if speedIsChanged then
-        self.speed[2] *= -1
-    end
-
-
 end
