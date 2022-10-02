@@ -58,8 +58,6 @@ function Ball:update()
             end
         end
 
-        print(self.speed[1] .. ", " .. self.speed[2])
-
     end
 
     -- borders collisions
